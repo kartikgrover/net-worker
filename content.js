@@ -11,6 +11,8 @@ function addNoteAndMessage() {
   }
 }
 
+
+// test
 // Function to click the "Send now" button with a timeout.
 function clickSendButtonWithTimeout() {
   setTimeout(() => {
