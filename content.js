@@ -11,6 +11,19 @@ function addNoteAndMessage() {
   }
 }
 
+// Function to click the "Send now" button with a timeout.
+function clickSendButtonWithTimeout() {
+  setTimeout(() => {
+    // Select the "Send now" button within the div with the class 'artdeco-modal__actionbar'
+    const sendButton = document.querySelector(".artdeco-modal__actionbar button[aria-label='Send now']");
+    if (sendButton) {
+      sendButton.click();
+    } else {
+      console.error("Send button not found.");
+    }
+  }, 10000); // Adjust the timeout value as needed
+}
+
 // Function to handle the "Connect" button click.
 function handleConnectButtonClick() {
   // Get the person's name from the LinkedIn profile.
@@ -20,10 +33,13 @@ function handleConnectButtonClick() {
     const firstName = personName.split(" ")[0];
 
     // Set the personalized note.
-    personalizedNote = `Hi ${firstName},\nI came across your profile and noticed that you are a fellow Penn Stater. The reason I am reaching out to you is that I had recently applied for the Software Engineer 1 position at Microsoft and I would love to follow your insights on how I can remain a competitive applicant.`;
+    personalizedNote = `Hi ${firstName},\nI came across your profile and noticed that you work at Loop. The reason I am reaching out to you is that I had recently applied for the Software Engineer 1 position there and I would love to follow your insights on how I can remain a competitive applicant.`;
 
     // Execute the addNoteAndMessage function immediately.
     addNoteAndMessage();
+
+    // Call the function to click the "Send now" button with a timeout
+    clickSendButtonWithTimeout();
   }
 }
 
@@ -33,7 +49,7 @@ function waitForTextArea() {
   if (textArea) {
     textArea.value = personalizedNote;
   } else {
-    setTimeout(waitForTextArea, 100); // Retry after 100ms
+    setTimeout(waitForTextArea, 500); // Retry after 500ms
   }
 }
 
@@ -45,6 +61,3 @@ document.addEventListener("click", function (event) {
     waitForTextArea(); // Start waiting for the textarea
   }
 });
-
-// You may continue observing the body for changes if needed.
-// ...
