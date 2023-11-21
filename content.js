@@ -1,3 +1,5 @@
+// content.js
+
 let personalizedNote = "";
 
 function clickElement(selector, errorMessage) {
@@ -11,7 +13,7 @@ function clickElement(selector, errorMessage) {
 
 function waitForElement(selector) {
   return new Promise((resolve) => {
-    const checkInterval = 50; // Reduced the interval
+    const checkInterval = 50;
     const checkElement = () => {
       const element = document.querySelector(selector);
       if (element) {
@@ -26,10 +28,12 @@ function waitForElement(selector) {
 
 function setPersonalizedNote() {
   const nameElement = document.querySelector('span.flex-1 strong');
+  const savedNote = chrome.storage.sync.get(['personalizedNote'], function(result) {
+    personalizedNote = result.personalizedNote || ''; // If not found, set to an empty string
+  });
   if (nameElement) {
     const personName = nameElement.textContent;
-    const firstName = personName.split(" ")[0];
-    personalizedNote = `Hi ${firstName},\nI came across your profile and noticed that you work at Crusoe. The reason I'm reaching out to you is that I recently applied for the Software Engineer 1 position there, and I'd love to follow your insights on how I can remain a competitive applicant.`;
+    personalizedNote = `Hi ${personName.split(" ")[0]},\n${document.getElementById('noteOutput').value}`;
   }
 }
 
@@ -39,13 +43,14 @@ async function handleConnectButtonClick() {
   const textArea = await waitForElement("#custom-message");
   textArea.value = personalizedNote;
   setTimeout(() => textArea.blur(), 0);
-  setTimeout(() => clickSendNowButton(), 0); // Adjust the delay as needed
+  setTimeout(() => clickSendNowButton(), 0);
 }
 
 function clickSendNowButton() {
   clickElement("button[aria-label='Send now']", "Send now button not found");
 }
 
+// Listen for messages from the extension popup
 document.addEventListener("click", function (event) {
   const target = event.target;
   if (target && target.textContent.trim() === "Connect") {

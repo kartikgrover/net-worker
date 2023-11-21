@@ -3,11 +3,17 @@
   "name": "NetWorker",
   "version": "1.0",
   "description": "Automatically fill personalized notes on LinkedIn when sending connection requests.",
+  "permissions": ["activeTab", "storage"],
+  "action": {
+    "default_popup": "popup.html"
+  },
   "content_scripts": [
     {
       "matches": ["*://www.linkedin.com/*"],
       "js": ["content.js"]
     }
-  ]
-
+  ],
+  "background": {
+    "service_worker": "popup.js"
+  }
 }
