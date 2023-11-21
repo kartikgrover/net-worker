@@ -26,19 +26,30 @@ function waitForElement(selector) {
   });
 }
 
-function setPersonalizedNote() {
+async function setPersonalizedNote() {
   const nameElement = document.querySelector('span.flex-1 strong');
-  const savedNote = chrome.storage.sync.get(['personalizedNote'], function(result) {
-    personalizedNote = result.personalizedNote || ''; // If not found, set to an empty string
+
+  // Use await with chrome.storage.sync.get
+  const result = await new Promise((resolve) => {
+    chrome.storage.sync.get(['personalizedNote'], function (result) {
+      resolve(result);
+    });
   });
+
+  personalizedNote = result.personalizedNote || ''; // If not found, set to an empty string
+
   if (nameElement) {
     const personName = nameElement.textContent;
-    personalizedNote = `Hi ${personName.split(" ")[0]},\n${document.getElementById('noteOutput').value}`;
+    greeting = `Hi ${personName.split(" ")[0]},\n`;
+    personalizedNote = greeting + personalizedNote;
+    console.log('Set personalized note:', personalizedNote);
+
   }
 }
 
+
 async function handleConnectButtonClick() {
-  setPersonalizedNote();
+  await setPersonalizedNote();
   clickElement("button[aria-label='Add a note']", "Add a note button not found");
   const textArea = await waitForElement("#custom-message");
   textArea.value = personalizedNote;
